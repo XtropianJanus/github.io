@@ -5,6 +5,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 
@@ -21,6 +22,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(i18n.init);
 app.use(express.static(path.join(__dirname, 'public')));
+
+// MongoDB connection
+mongoose.connect('mongodb+srv://mike-llena:<FvpmHnNGVpdX6Evw>@cluster1.y9oug.mongodb.net/creditTransferDB?retryWrites=true&w=majority&appName=Cluster1', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error:', err);
+});
 
 app.use('/', routes);
 
